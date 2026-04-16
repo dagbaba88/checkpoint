@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MDS + NetScaler L1 Operations Automation UI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PROJE</p>
+        <h1>MDS (R81.20) + NetScaler L1 Operations Automation Platform</h1>
+      </div>
+      <div class="env-switch">
+        <label for="environment">Environment</label>
+        <select id="environment">
+          <option value="dev">DEV</option>
+          <option value="prod">PROD</option>
+        </select>
+      </div>
+    </header>
+
+    <main>
+      <section class="grid two">
+        <article class="card">
+          <h2>Domain Controller</h2>
+          <div class="domain-list">
+            <button class="pill active" data-domain="mds">Security Domain (MDS)</button>
+            <button class="pill" data-domain="netscaler">Load Balancer Domain (NetScaler)</button>
+            <button class="pill" data-domain="nginx">Traffic Layer (NGINX Passive)</button>
+          </div>
+          <p id="domain-description">
+            Check Point MDS R81.20 API ile CMA bazlı object, user ve policy operasyonları.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Execution Lifecycle</h2>
+          <ol class="steps">
+            <li>Input validation</li>
+            <li>Target system determination</li>
+            <li>CMA selection (MDS)</li>
+            <li>API execution</li>
+            <li>Result verification</li>
+            <li>Audit logging + optional rollback</li>
+          </ol>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Workflow Designer</h2>
+        <div class="grid three">
+          <div>
+            <label for="cma">CMA Context</label>
+            <select id="cma">
+              <option>cma-finance-01</option>
+              <option>cma-retail-02</option>
+              <option>cma-health-03</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="operation">Operation Type</label>
+            <select id="operation">
+              <option value="ip-object">IP Object Create</option>
+              <option value="user-bulk">Bulk User Provision</option>
+              <option value="rule-append">Policy Rule Append</option>
+              <option value="vip-create">VIP Create</option>
+              <option value="backend-onboard">Backend Onboarding</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="dry-run">Mode</label>
+            <select id="dry-run">
+              <option value="true">Dry-Run (Default)</option>
+              <option value="false">Apply</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="template-panel">
+          <h3>Payload Template (JSON)</h3>
+          <textarea id="payload" rows="9">{
+  "ticket_id": "INC-2026-0416",
+  "target": "mds",
+  "cma": "cma-finance-01",
+  "operation": "ip-object",
+  "items": [
+    { "name": "srv-fin-db-01", "ip": "10.10.20.11" },
+    { "name": "srv-fin-db-02", "ip": "10.10.20.12" }
+  ]
+}</textarea>
+        </div>
+
+        <div class="actions">
+          <button id="validate">Validate</button>
+          <button id="execute" class="primary">Execute</button>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <article class="card">
+          <h2>Bulk Operations Engine</h2>
+          <p>JSON / CSV batch input desteklenir. Idempotent kontroller duplicate obje oluşumunu engeller.</p>
+          <div class="upload-box">
+            <input type="file" id="bulkFile" accept=".json,.csv" />
+            <p id="file-meta">Henüz dosya seçilmedi.</p>
+          </div>
+          <ul class="checklist">
+            <li><input type="checkbox" checked disabled /> Dry-run varsayılan</li>
+            <li><input type="checkbox" checked disabled /> Audit log zorunlu</li>
+            <li><input type="checkbox" checked disabled /> CMA context zorunlu (MDS)</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Safety Rules</h2>
+          <div class="safety-grid">
+            <div><strong>MDS Scope</strong><span>CMA olmadan çalıştırma engellendi</span></div>
+            <div><strong>NetScaler Scope</strong><span>VIP / Service scoped validation aktif</span></div>
+            <div><strong>Standard</strong><span>R81.20 API + NITRO REST zorunlu</span></div>
+            <div><strong>Traceability</strong><span>Her request için request-id ve audit trail</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Execution Feed</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Time (UTC)</th>
+              <th>Request ID</th>
+              <th>Domain</th>
+              <th>Operation</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="feed"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
