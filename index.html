@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Örnek Web UI - MDS + NetScaler</title>
+    <style>
+      :root {
+        --bg: #0a1022;
+        --panel: #141d3a;
+        --line: #2a3a72;
+        --text: #ecf2ff;
+        --muted: #9fb0da;
+        --accent: #77a8ff;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        padding: 24px;
+      }
+
+      h1 { margin-top: 0; }
+
+      .layout {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px;
+      }
+
+      .muted { color: var(--muted); }
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        margin-right: 6px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 8px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+      }
+
+      input, select, textarea, button {
+        width: 100%;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #0f1730;
+        color: var(--text);
+        padding: 8px;
+      }
+
+      button {
+        background: var(--accent);
+        color: #09112a;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Örnek Web UI: MDS + NetScaler L1 Operations</h1>
+    <p class="muted">Bu sadece görsel bir örnek dashboard'dur (backend bağlantısı yok).</p>
+
+    <div class="layout">
+      <section class="card">
+        <h3>Domain Seçimi</h3>
+        <span class="badge">MDS (R81.20)</span>
+        <span class="badge">NetScaler</span>
+        <span class="badge">NGINX (Passive)</span>
+      </section>
+
+      <section class="card">
+        <h3>Örnek Operasyon Formu</h3>
+        <label>CMA</label>
+        <select>
+          <option>cma-finance-01</option>
+          <option>cma-retail-02</option>
+        </select>
+
+        <label>İşlem</label>
+        <select>
+          <option>IP Object Create</option>
+          <option>Bulk User Create</option>
+          <option>VIP Create</option>
+        </select>
+
+        <label>Payload (JSON)</label>
+        <textarea rows="5">{"operation":"ip-object","dry_run":true}</textarea>
+
+        <button>Dry-Run Execute</button>
+      </section>
+
+      <section class="card">
+        <h3>Execution Feed (Örnek)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Request</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-04-16T10:10:00Z</td>
+              <td>REQ-EXAMPLE-01</td>
+              <td>DRY_RUN</td>
+            </tr>
+            <tr>
+              <td>2026-04-16T10:12:00Z</td>
+              <td>REQ-EXAMPLE-02</td>
+              <td>SUCCESS</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </body>
+</html>
